@@ -349,7 +349,7 @@ All types live in `maas-controller/api/maas/v1alpha1/`. Group: `maas.opendatahub
 erDiagram
     Config ||--o{ AITenant : "GC anchor (ownerRef)"
     AITenant ||--|| MaasTenantConfig : "provisions (annotation-owned)"
-    AITenant ||--|| Namespace : "creates ai-tenant-<name>"
+    AITenant ||--|| Namespace : "creates tenant namespace"
     MaaSModelRef }o--|| LLMInferenceService : "or"
     MaaSModelRef }o--|| ExternalModel : "points to backend"
     MaaSAuthPolicy }o--o{ MaaSModelRef : "grants access to (modelRefs)"
@@ -430,7 +430,7 @@ flowchart TD
     SNAP --> WORK[Do work:<br/>render/apply owned resources]
     WORK --> COND[Compute conditions + phase<br/>ObservedGeneration]
     COND --> DIFF{status changed?<br/>DeepEqual vs snapshot}
-    DIFF -- yes --> UPD[Status().Update]
+    DIFF -- yes --> UPD["Status().Update"]
     DIFF -- no --> SKIP[Skip write - avoid hot loop]
     UPD --> RQ[Requeue / watch-driven]
     SKIP --> RQ

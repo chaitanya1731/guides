@@ -1,0 +1,53 @@
+name: build and deploy guides
+
+# Regenerates the printable HTML from the Markdown sources on every push to
+# main and publishes it to the gh-pages branch (which GitHub Pages serves).
+# main stays source-only; generated HTML lives only on gh-pages.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Build HTML from Markdown
+        run: ./build.sh
+
+      - name: Publish to gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          out="$(mktemp -d)"
+          touch "$out/.nojekyll"
+          cp index.html "$out/"
+          for f in */index.html; do
+            mkdir -p "$out/$(dirname "$f")"
+            cp "$f" "$out/$(dirname "$f")/"
+          done
+          cd "$out"
+          git init -q
+          git checkout -q -b gh-pages
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "deploy: build from ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
