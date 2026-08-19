@@ -486,7 +486,7 @@ Key format: `sk-oai-{key_id}_{secret}`.
 - `last_used_at` updates are **async + debounced** per-key (a `sync.Map` + CAS) to avoid Postgres row-lock storms.
 
 ### Database
-Single table **`api_keys`** (`id, username, name, key_hash, status, user_groups[], created_at, expires_at, last_used_at, ephemeral, subscription, tenant`). **Tenant isolation is enforced in every query** (writes reject cross-tenant with `ErrTenantMismatch`; uniqueness is per-tenant). Migrations run at startup via **golang-migrate** over an embedded FS. `GetByHash` is the hot validation path and lazily flips expired keys to `expired`.
+Single table **`api_keys`** (`id, username, name, key_hash, status, user_groups[], created_at, expires_at, last_used_at, ephemeral, subscription, tenant`, plus a `labels` JSONB column and a `description` field — added for organisational tracking/management; `labels` is GIN-indexed for `@>` containment queries and CHECK-constrained to a JSON object). **Tenant isolation is enforced in every query** (writes reject cross-tenant with `ErrTenantMismatch`; uniqueness is per-tenant). Migrations run at startup via **golang-migrate** over an embedded FS. `GetByHash` is the hot validation path and lazily flips expired keys to `expired`.
 
 ### Subscription selection
 `MaaSSubscription` CRs are read from an **informer cache** (unstructured) and parsed. Selection is explicit (`namespace/name`) or auto: single accessible → use it; multiple → `MultipleSubscriptionsError`; none → `NoSubscriptionError`. `SelectHighestPriority` sorts by *priority desc → maxLimit desc → name asc*. Health gating differs between key-creation (lenient) and inference (strict — checks TRLP readiness).
