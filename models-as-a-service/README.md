@@ -32,6 +32,7 @@
 20. [Challenges tackled during development](#20-challenges-tackled-during-development)
 21. [Glossary](#21-glossary)
 22. [Q&A / FAQ](#22-qa--faq)
+23. [References & further reading](#23-references--further-reading)
 
 ---
 
@@ -950,6 +951,48 @@ A: `MaxConcurrentReconciles` (tunable, clamped 1–10), leader election (on), in
 - Inference engine? → vLLM. CI model? → llm-d simulator.
 - Frontend? → React. Backend lang? → Go 1.25.
 - What's shown only once? → the plaintext API key.
+
+---
+
+## 23. References & further reading
+
+### Blog series — MaaS internals (hands-on)
+A practitioner series on how the platform actually works, in reading order:
+
+1. **Protecting enterprise AI: How to manage API keys in Models-as-a-Service (MaaS)** — Ishita Sequeira & Jamie Land, Jun 15 2026. The API-key lifecycle: minting, hashing, validation, revocation.
+   <https://www.redhat.com/en/blog/protecting-enterprise-ai-how-manage-api-keys-models-service-maas>
+2. **Models-as-a-Service (MaaS) governance: Managing AI access and token quotas** — Chaitanya Kulkarni, Jul 21 2026. The two-gate model: `MaaSAuthPolicy` (access) + `MaaSSubscription` (token quotas) enforced in parallel.
+   <https://www.redhat.com/en/blog/models-service-maas-governance-managing-ai-access-and-token-quotas>
+3. **Track model usage with the OpenShift AI 3.4 usage dashboard** — Red Hat Developer, Jul 6 2026. The usage-tracking / metering follow-on: observability, chargeback, and the cardinality trade-off of `captureUser`.
+   <https://developers.redhat.com/articles/2026/07/06/track-model-usage-openshift-ai-usage-dashboard>
+
+### Related articles & announcements
+- **Introducing Models-as-a-Service in OpenShift AI** — Red Hat Developer, Nov 25 2025 (the launch overview).
+  <https://developers.redhat.com/articles/2025/11/25/introducing-models-service-openshift-ai>
+- **Model-as-a-Service: How to run your own private AI API** — Red Hat Developer, Jun 12 2026 (consumer-facing walkthrough).
+  <https://developers.redhat.com/articles/2026/06/12/model-service-how-run-your-own-private-ai-api>
+- **Scaling enterprise AI: Delivering Models-as-a-Service with Red Hat OpenShift AI 3.4** — Red Hat blog.
+  <https://www.redhat.com/en/blog/scaling-enterprise-ai-delivering-models-service-openshift-ai-34>
+- **A guide to Models-as-a-Service** — Red Hat resource overview.
+  <https://www.redhat.com/en/resources/models-as-a-service-overview>
+
+### Official documentation
+- **Govern LLM access with Models-as-a-Service** — Red Hat OpenShift AI product docs.
+  <https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/3.3/html/govern_llm_access_with_models-as-a-service/use-models-as-a-service_maas>
+- **Project documentation site** (OpenDataHub MaaS).
+  <https://opendatahub-io.github.io/models-as-a-service/>
+
+### Source & code exploration
+- **Source repository** — `opendatahub-io/models-as-a-service`.
+  <https://github.com/opendatahub-io/models-as-a-service>
+- **DeepWiki** — auto-generated, browsable code walkthrough of the repo.
+  <https://deepwiki.com/opendatahub-io/models-as-a-service>
+
+### Key upstream dependencies
+- **Gateway API** — <https://gateway-api.sigs.k8s.io/>
+- **Kuadrant** (Authorino + Limitador) — <https://docs.kuadrant.io/> · Authorino <https://github.com/Kuadrant/authorino> · Limitador <https://github.com/Kuadrant/limitador>
+- **Red Hat Connectivity Link (RHCL)** — <https://docs.redhat.com/en/documentation/red_hat_connectivity_link>
+- **KServe** — <https://kserve.github.io/website/> · **vLLM** — <https://docs.vllm.ai/> · **llm-d** — <https://llm-d.ai/>
 
 ---
 
